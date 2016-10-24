@@ -12,7 +12,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import entity2
 import numpy as np
 import rbm
-
+from operator import itemgetter
 
 # In[17]:
 
@@ -61,9 +61,11 @@ def split_into_sentences(text):
 
 # In[20]:
 
-text = "An army soldier was injured in fierce gun battle with a group of infiltrating terrorists from across the Line of Control in Gali Maidan area of Sawjian sector, while a BSF jawan was injured in unprovoked firing by Pakistani rangers in Hiranagar sector along the international border in Kathua district on Friday.Identifying the injured army soldier as Launce Naik Vinod Kumar and the BSF jawan as Gurnam Singh, sources said that former got injured during an encounter with a group of terrorists who sneaked into Sawjian sector on the Indian side from the Pakistan occupied Kashmir during wee hours of Friday. The encounter was in progress, sources added.Significantly, the infiltration attempt from across the LoC in Sawjian sector of Poonch district came nearly 24 hours after half a dozen heavily armed terrorists attacked a BSF naka along the international border in Kathua district with small arms fire and rocket propelled grenades so as to cross over to the Indian side. The infiltration attempt was foiled by alert BSF personnel who retaliated killing one of them as during illumation of the area with the help of tracer bomb, terrorists fleeing back to Pakistan side were seen carrying a body with them, sources added.Meanwhile, a BSF jawan was injured as Pakistani Rangers continued resorting to mortar shelling and small arms fire on two forward Indian positions at Bobiyan in Hiranagar sector of Kathua district. Sources said that the fire from across the international border first came around 9.35 am and it continued for nearly 40 minutes.Thereafter, the Pakistani Rangers again resumed firing on Indian side around 12.15 noon, sources said, adding that it was continuing till reports last came in. The Indian side was also retaliating.Ever since, India carried out surgical strikes across the Line of Control causing sufficient damage to terrorists and those shielding them last month, Pakistan has been resorting to mortar shelling and small arms fire at one or the other place along the borders in Jammu region. It continued lobbing mortar shells, besides resorting to automatics and small arms fire along the LoC in Rajouri district’s Manjakote area of Bhimber Gali sector throughout Wednesday night.The Indian troops retaliated appropriately. There had been no casualty or damage on the Indian side. Pakistani troops have resorted to firing in Rajouri sector also this afternoon."
+#text = "An army soldier was injured in fierce gun battle with a group of infiltrating terrorists from across the Line of Control in Gali Maidan area of Sawjian sector, while a BSF jawan was injured in unprovoked firing by Pakistani rangers in Hiranagar sector along the international border in Kathua district on Friday.Identifying the injured army soldier as Launce Naik Vinod Kumar and the BSF jawan as Gurnam Singh, sources said that former got injured during an encounter with a group of terrorists who sneaked into Sawjian sector on the Indian side from the Pakistan occupied Kashmir during wee hours of Friday. The encounter was in progress, sources added.Significantly, the infiltration attempt from across the LoC in Sawjian sector of Poonch district came nearly 24 hours after half a dozen heavily armed terrorists attacked a BSF naka along the international border in Kathua district with small arms fire and rocket propelled grenades so as to cross over to the Indian side. The infiltration attempt was foiled by alert BSF personnel who retaliated killing one of them as during illumation of the area with the help of tracer bomb, terrorists fleeing back to Pakistan side were seen carrying a body with them, sources added.Meanwhile, a BSF jawan was injured as Pakistani Rangers continued resorting to mortar shelling and small arms fire on two forward Indian positions at Bobiyan in Hiranagar sector of Kathua district. Sources said that the fire from across the international border first came around 9.35 am and it continued for nearly 40 minutes.Thereafter, the Pakistani Rangers again resumed firing on Indian side around 12.15 noon, sources said, adding that it was continuing till reports last came in. The Indian side was also retaliating.Ever since, India carried out surgical strikes across the Line of Control causing sufficient damage to terrorists and those shielding them last month, Pakistan has been resorting to mortar shelling and small arms fire at one or the other place along the borders in Jammu region. It continued lobbing mortar shells, besides resorting to automatics and small arms fire along the LoC in Rajouri district’s Manjakote area of Bhimber Gali sector throughout Wednesday night.The Indian troops retaliated appropriately. There had been no casualty or damage on the Indian side. Pakistani troops have resorted to firing in Rajouri sector also this afternoon."
+#text = "India is my country and I proud to be an Indian. It ranks as the seventh largest country of the world as well as second most populated country of the world. It is also known as Bharat, Hindustan and Aryavart. It is a peninsula means surrounded by oceans from three sides such as Bay of Bengal in east, Arabian Sea in west and Indian Ocean in south. The national animal of India is tiger, national bird is peacock, national flower is lotus and national fruit is mango. The flag of India has tricolor, saffron means purity (the uppermost), white means peace (the middle one having an Ashok Chakra) and green means fertility (the lowest one). Ashok Chakra contains equally divided 24 spokes. The national anthem of India is “Jana Gana Mana”, the national song is “Vande Mataram” and national sport is Hockey.India is a country where people speak many languages and people of different castes, creeds, religions and cultures live together. That’s why India is famous for common saying of “unity in diversity”. It is well known as the land of spirituality, philosophy, science and technology. People of various religions like Hinduism, Buddhism, Jainism, Sikhism, Islam, Christianity and Judaism lives here together from the ancient time. It is famous country for its agriculture and farming which are the backbones of it from the ancient time. It uses it own produced food grains and fruits. It is a famous tourist’s paradise because it attracts people’s mind from all over the world. It is rich in monuments, tombs, churches, historical buildings, temples, museums, scenic beauty, wild life sanctuaries, places of architecture, etc are the source of revenue to it.It is the place where Taj Mahal, Fatehpur Sikri, golden temple, Qutab Minar, Red Fort, Ooty, Nilgiris, Kashmir, Kajuraho, Ajanta and Ellora caves, etc wonders exist. It is the country of great rivers, mountains, valleys, lakes and oceans. The national language of India is Hindi. It is a country where 29 states and UTs. It has 28 states which again have many small villages. It is a chief agricultural country famous for producing sugarcane, cotton, jute, rice, wheat, cereals etc crops. It is a country where great leaders (Shivaji, Gandhiji, Nehru, Dr. Ambedkar, etc), great scientists (Dr. Jagadeeshchandra Bose, Dr Homi Bhabha, Dr. C. V Raman, Dr. Naralikar, etc) and great reformers (Mother Teresa, Pandurangashastri Alhavale, T. N. Sheshan) took birth. It is a country where diversity exists with strong unity and peace."
 
-
+text = "Mahatma Gandhi is well known as the “Father of the Nation or Bapu” because of his greatest contributions towards the independence of our country. He was the one who believed in the non-violence and unity of the people and brought spirituality in the Indian politics. He worked hard for the removal of the untouchability in the Indian society, upliftment of the backward classes in India, raised voice to develop villages for social development, inspired Indian people to use swadeshi goods and other social issues. He brought common people in front to participate in the national movement and inspired them to fight for their true freedom.He was one of the persons who converted people’s dream of independence into truth a day through his noble ideals and supreme sacrifices. He is still remembered between us for his great works and major virtues such as non-violence, truth, love and fraternity. He was not born as great but he made himself great through his hard struggles and works. He was highly influenced by the life of the King Harischandra from the play titled as Raja Harischandra. After his schooling, he completed his law degree from England and began his career as a lawyer. He faced many difficulties in his life but continued walking as a great leader.He started many mass movements like Non-cooperation movement in 1920, civil disobedience movement in 1930 and finally the Quit India Movement in 1942 all through the way of independence of India. After lots of struggles and works, independence of India was granted finally by the British Government. He was a very simple person who worked to remove the colour barrier and caste barrier. He also worked hard for removing the untouchability in the Indian society and named untouchables as “Harijan” means the people of God.He was a great social reformer and Indian freedom fighter who died a day after completing his aim of life. He inspired Indian people for the manual labour and said that arrange all the resource ownself for living a simple life and becoming self-dependent. He started weaving cotton clothes through the use of Charakha in order to avoid the use of videshi goods and promote the use of Swadeshi goods among Indians. He was a strong supporter of the agriculture and motivated people to do agriculture works. He was a spiritual man who brought spirituality to the Indian politics. He died in 1948 on 30th of January and his body was cremated at Raj Ghat, New Delhi. 30th of January is celebrated every year as the Martyr Day in India in order to pay homage to him."
+#text = "Discipline is something which keeps everyone under good control. It motivates a person to go ahead in the life and get success. Each one of us has experienced discipline in different forms according to their own requirement and understanding towards life. It availability of it in everyone’s life is very necessary to go on the right path. Without discipline life becomes inactive and useless as nothing go according to the plan. If we need to implement our strategy in right way about any project to be completed, we need to be in discipline first. Discipline is generally of two types. One is induced discipline in which we learn to be in discipline by others and another one is self-discipline which comes from own mind to be in discipline. However sometimes, we need motivation from someone effective personality to improve our self-discipline habit.We need discipline in many ways at many stages of our life so it is good to practice discipline from the childhood. Self-discipline means differently to different people such as for students, it means motivating ownself to get concentrated on the study and complete assignments in right time. However, for working person, it means to get up from bed on time in the morning, do exercise to get fit, go to office on time, and do job tasks properly. Self-discipline is highly required by everyone to have, as in modern time no one has time for others to motivate towards being in discipline. Without discipline one can be failure in the life, she/he cannot enjoy academic success or other success in the career. Self-discipline is required in every field like dieting (it needs to control over fatty and junk foods), regular exercise (it needs to concentrate), etc. One can get health disorders and fatty body without control over food so it needs discipline. Parents need to develop self-discipline habits as they need to teach their kids a good discipline. They need to motivate them all time to behave well and do everything at right time. Some naughty children do not follow their parent’s discipline, in such cases parents need to have dare and patience to teach their naughty children. Everyone has different time and capacity to learn the meaning of discipline according to the nature. So, never give up and always try to get in discipline, as a small step can be converted to large step a day."
 # In[27]:
 
 sentences = split_into_sentences(text)
@@ -182,8 +184,10 @@ def properNounScores(tagged) :
 
 
 # In[43]:
-
+print("\n\nProper Noun Score : \n")
 properNounScore = properNounScores(tagged)
+
+print(properNounScore)
 
 def text_to_vector(text):
     words = WORD.findall(text)
@@ -264,192 +268,10 @@ def namedEntityRecog(sentences) :
 
 
 namedEntityRecogScore = namedEntityRecog(sentences)
+print("\n\nNamed Entity Score : ")
+print(namedEntityRecogScore)
 
 # In[2]:
-
-class RBM:
-  
-    def __init__(self, num_visible, num_hidden, learning_rate = 0.1):
-        self.num_hidden = num_hidden
-        self.num_visible = num_visible
-        self.learning_rate = learning_rate
-
-        # Initialize a weight matrix, of dimensions (num_visible x num_hidden), using
-        # a Gaussian distribution with mean 0 and standard deviation 0.1.
-        self.weights = 0.1 * np.random.randn(self.num_visible, self.num_hidden)    
-        # Insert weights for the bias units into the first row and first column.
-        self.weights = np.insert(self.weights, 0, 0, axis = 0)
-        self.weights = np.insert(self.weights, 0, 0, axis = 1)
-
-    def train(self, data, max_epochs = 1000):
-        """
-        Train the machine.
-
-        Parameters
-        ----------
-        data: A matrix where each row is a training example consisting of the states of visible units.    
-        """
-
-        num_examples = data.shape[0]
-
-        # Insert bias units of 1 into the first column.
-        data = np.insert(data, 0, 1, axis = 1)
-
-        for epoch in range(max_epochs):      
-            # Clamp to the data and sample from the hidden units. 
-            # (This is the "positive CD phase", aka the reality phase.)
-            pos_hidden_activations = np.dot(data, self.weights)      
-            pos_hidden_probs = self._logistic(pos_hidden_activations)
-            pos_hidden_states = pos_hidden_probs > np.random.rand(num_examples, self.num_hidden + 1)
-            # Note that we're using the activation *probabilities* of the hidden states, not the hidden states       
-            # themselves, when computing associations. We could also use the states; see section 3 of Hinton's 
-            # "A Practical Guide to Training Restricted Boltzmann Machines" for more.
-            pos_associations = np.dot(data.T, pos_hidden_probs)
-
-            # Reconstruct the visible units and sample again from the hidden units.
-            # (This is the "negative CD phase", aka the daydreaming phase.)
-            neg_visible_activations = np.dot(pos_hidden_states, self.weights.T)
-            neg_visible_probs = self._logistic(neg_visible_activations)
-            neg_visible_probs[:,0] = 1 # Fix the bias unit.
-            neg_hidden_activations = np.dot(neg_visible_probs, self.weights)
-            neg_hidden_probs = self._logistic(neg_hidden_activations)
-            # Note, again, that we're using the activation *probabilities* when computing associations, not the states 
-            # themselves.
-            neg_associations = np.dot(neg_visible_probs.T, neg_hidden_probs)
-
-            # Update weights.
-            self.weights += self.learning_rate * ((pos_associations - neg_associations) / num_examples)
-
-            error = np.sum((data - neg_visible_probs) ** 2)
-            print("Epoch %s: error is %s" % (epoch, error))
-
-    def run_visible(self, data):
-        """
-        Assuming the RBM has been trained (so that weights for the network have been learned),
-        run the network on a set of visible units, to get a sample of the hidden units.
-    
-        Parameters
-        ----------
-        data: A matrix where each row consists of the states of the visible units.
-    
-        Returns
-        -------
-        hidden_states: A matrix where each row consists of the hidden units activated from the visible
-        units in the data matrix passed in.
-        """
-    
-        num_examples = data.shape[0]
-    
-        # Create a matrix, where each row is to be the hidden units (plus a bias unit)
-        # sampled from a training example.
-        hidden_states = np.ones((num_examples, self.num_hidden + 1))
-    
-        # Insert bias units of 1 into the first column of data.
-        data = np.insert(data, 0, 1, axis = 1)
-
-        # Calculate the activations of the hidden units.
-        hidden_activations = np.dot(data, self.weights)
-        # Calculate the probabilities of turning the hidden units on.
-        hidden_probs = self._logistic(hidden_activations)
-        # Turn the hidden units on with their specified probabilities.
-        hidden_states[:,:] = hidden_probs > np.random.rand(num_examples, self.num_hidden + 1)
-        # Always fix the bias unit to 1.
-        # hidden_states[:,0] = 1
-  
-        # Ignore the bias units.
-        hidden_states = hidden_states[:,1:]
-        return hidden_states
-    
-      # TODO: Remove the code duplication between this method and `run_visible`?
-    def run_hidden(self, data):
-        """
-        Assuming the RBM has been trained (so that weights for the network have been learned),
-        run the network on a set of hidden units, to get a sample of the visible units.
-
-        Parameters
-        ----------
-        data: A matrix where each row consists of the states of the hidden units.
-
-        Returns
-        -------
-        visible_states: A matrix where each row consists of the visible units activated from the hidden
-        units in the data matrix passed in.
-        """
-
-        num_examples = data.shape[0]
-
-        # Create a matrix, where each row is to be the visible units (plus a bias unit)
-        # sampled from a training example.
-        visible_states = np.ones((num_examples, self.num_visible + 1))
-
-        # Insert bias units of 1 into the first column of data.
-        data = np.insert(data, 0, 1, axis = 1)
-
-        # Calculate the activations of the visible units.
-        visible_activations = np.dot(data, self.weights.T)
-        # Calculate the probabilities of turning the visible units on.
-        visible_probs = self._logistic(visible_activations)
-        # Turn the visible units on with their specified probabilities.
-        visible_states[:,:] = visible_probs > np.random.rand(num_examples, self.num_visible + 1)
-        # Always fix the bias unit to 1.
-        # visible_states[:,0] = 1
-
-        # Ignore the bias units.
-        visible_states = visible_states[:,1:]
-        return visible_states
-    
-    def daydream(self, num_samples):
-        """
-        Randomly initialize the visible units once, and start running alternating Gibbs sampling steps
-        (where each step consists of updating all the hidden units, and then updating all of the visible units),
-        taking a sample of the visible units at each step.
-        Note that we only initialize the network *once*, so these samples are correlated.
-
-        Returns
-        -------
-        samples: A matrix, where each row is a sample of the visible units produced while the network was
-        daydreaming.
-        """
-
-        # Create a matrix, where each row is to be a sample of of the visible units 
-        # (with an extra bias unit), initialized to all ones.
-        samples = np.ones((num_samples, self.num_visible + 1))
-
-        # Take the first sample from a uniform distribution.
-        samples[0,1:] = np.random.rand(self.num_visible)
-
-        # Start the alternating Gibbs sampling.
-        # Note that we keep the hidden units binary states, but leave the
-        # visible units as real probabilities. See section 3 of Hinton's
-        # "A Practical Guide to Training Restricted Boltzmann Machines"
-        # for more on why.
-        for i in range(1, num_samples):
-            visible = samples[i-1,:]
-
-            # Calculate the activations of the hidden units.
-            hidden_activations = np.dot(visible, self.weights)      
-            # Calculate the probabilities of turning the hidden units on.
-            hidden_probs = self._logistic(hidden_activations)
-            # Turn the hidden units on with their specified probabilities.
-            hidden_states = hidden_probs > np.random.rand(self.num_hidden + 1)
-            # Always fix the bias unit to 1.
-            hidden_states[0] = 1
-
-            # Recalculate the probabilities that the visible units are on.
-            visible_activations = np.dot(hidden_states, self.weights.T)
-            visible_probs = self._logistic(visible_activations)
-            visible_states = visible_probs > np.random.rand(self.num_visible + 1)
-            samples[i,:] = visible_states
-
-        # Ignore the bias units (the first column), since they're always set to 1.
-        return samples[:,1:]        
-      
-    def _logistic(self, x):
-        return 1.0 / (1 + np.exp(-x))
-
-#if __name__ == '__main__':
-  
-
 
 
 # In[53]:
@@ -472,36 +294,72 @@ for i in range(6) :
 
 
 # In[61]:
-
+print("\n\n\nPrinting Feature Matrix : ")
 print(featureMat)
-featureMat_normed = featureMat / featureMat.max(axis=0)
+print("\n\n\nPrinting Feature Matrix Normed : ")
+#featureMat_normed = featureMat / featureMat.max(axis=0)
+
+featureMat_normed = featureMat
+
+
+
 print(featureMat_normed)
 for i in range(len(sentences)):
     print(featureMat_normed[i])
 # In[65]:
 
-r = RBM(num_visible = 6, num_hidden = 6)
+#r = RBM(num_visible = 6, num_hidden = 6)
 #training_data = np.array([[0.5,0.9,0.7,0,0.8],[0.3,0,1,0.4,0],[0.8,1,1,0,0.6],[0,0.5,1,1,1], [0,0,1,1,0],[0,0,1,1,0.6]])
-training_data = featureMat_normed
-r.train(training_data, max_epochs = 5000)
-print(r.weights)
-enhanced_featureMat = r.run_visible(featureMat_normed)
-print(enhanced_featureMat)
+#training_data = featureMat_normed
+#r.train(training_data, max_epochs = 5000)
+#print(r.weights)
+#enhanced_featureMat = r.run_visible(featureMat_normed)
+#print(enhanced_featureMat)
 
 
-for i in range(len(sentences)):
-    user = np.array([featureMat_normed[i]])
-    enhanced_feature = r.run_visible(user)
-    print(enhanced_feature)
+#for i in range(len(sentences)):
+ #   user = np.array([featureMat_normed[i]])
+ #   enhanced_feature = r.run_visible(user)
+ #   print(enhanced_feature)
 
 
-rbm.test_rbm(dataset = featureMat_normed,learning_rate=0.1, training_epochs=10, batch_size=4,n_chains=4,
+temp = rbm.test_rbm(dataset = featureMat_normed,learning_rate=0.1, training_epochs=10, batch_size=4,n_chains=4,
              n_hidden=6)
 
 # In[54]:
+#print(temp)
+print("\n\n")
+print(np.sum(temp, axis=1))
+
+enhanced_feature_sum = []
+
+for i in range(len(np.sum(temp,axis=1))) :
+    enhanced_feature_sum.append([np.sum(temp,axis=1)[i],i])
+
+print(enhanced_feature_sum)
+print("\n\n\n")
+
+enhanced_feature_sum.sort(key=lambda x: x[0])
+print(enhanced_feature_sum)
+
+length_to_be_extracted = len(enhanced_feature_sum)/2
+
+print("\n\nThe text is : \n\n")
+for x in range(len(sentences)):
+    print(sentences[x])
+
+print("\n\n\nExtracted sentences : \n\n\n")
+
+print(sentences[0])
+
+for x in range(length_to_be_extracted) :
+    if(enhanced_feature_sum[x][1] != 0) :
+        print(sentences[enhanced_feature_sum[x][1]])
+
+
+
 
 #featureMatrix
-
 
 # In[ ]:
 

@@ -512,3 +512,4 @@ def test_rbm(dataset,learning_rate=0.1, training_epochs=5, batch_size=4,n_chains
     print("\n\n\nEnhanced Feature Matrix: ")
     temp = numpy.dot(dataset, numpy.transpose(W))
     print(temp)
+    return temp
