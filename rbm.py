@@ -361,7 +361,7 @@ class RBM(object):
 
 
 def test_rbm(dataset,learning_rate=0.1, training_epochs=5, batch_size=4,n_chains=4,
-             n_hidden=6):
+             n_hidden=7):
     """
     Demonstrate how to train and afterwards sample from it using Theano.
 
