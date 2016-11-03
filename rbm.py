@@ -19,6 +19,7 @@ import numpy
 import theano
 import theano.tensor as T
 import os
+import pandas as pd
 
 from theano.tensor.shared_randomstreams import RandomStreams
 
@@ -512,4 +513,6 @@ def test_rbm(dataset,learning_rate=0.1, training_epochs=5, batch_size=4,n_chains
     print("\n\n\nEnhanced Feature Matrix: ")
     temp = numpy.dot(dataset, numpy.transpose(W))
     print(temp)
+    dataframe = pd.DataFrame(data=temp.astype(float))
+    dataframe.to_csv('enhancedFMatrix.csv', sep=' ', header=False, float_format='%.4f', index=False)
     return temp
