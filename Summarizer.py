@@ -362,18 +362,33 @@ filenames.append("article1")
 filenames.append("article2")
 filenames.append("article3")
 filenames.append("article4")
+filenames.append("article5")
+filenames.append("article6")
+filenames.append("article7")
+filenames.append("article8")
+# filenames.append("article9")
 
 output_file_list = []
 output_file_list.append("op1")
 output_file_list.append("op2")
 output_file_list.append("op3")
 output_file_list.append("op4")
+output_file_list.append("op5")
+output_file_list.append("op6")
+output_file_list.append("op7")
+output_file_list.append("op8")
+# output_file_list.append("op9")
 
 humanExtractedYesOrNo_files = []
 humanExtractedYesOrNo_files.append("list1")
 humanExtractedYesOrNo_files.append("list2")
 humanExtractedYesOrNo_files.append("list3")
 humanExtractedYesOrNo_files.append("list4")
+humanExtractedYesOrNo_files.append("list5")
+humanExtractedYesOrNo_files.append("list6")
+humanExtractedYesOrNo_files.append("list7")
+humanExtractedYesOrNo_files.append("list8")
+# humanExtractedYesOrNo_files.append("list9")
 
 #executeForAFile(filename)
 
