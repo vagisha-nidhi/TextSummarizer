@@ -55,10 +55,13 @@ class Paragraphs:
 
 # Here's an example function, showing how to use class Paragraphs:
 def show_paragraphs(filename, numpars=20):
+    paralist = []
     pp = Paragraphs(open(filename))
     for p in pp:
-        print "Par#%d : %s" % (pp.para_num, repr(p))
+        #print "Par#%d : %s" % (pp.para_num, repr(p))
+        paralist.append(p)
         if pp.para_num>numpars: break
 
-show_paragraphs('article2')
+    return paralist
+#print(show_paragraphs('article2'))
 

@@ -16,7 +16,12 @@ import math
 from operator import itemgetter
 import pandas as pd
 import askHuman
+import sys
+from nltk.stem import PorterStemmer
+from collections import Counter
+import para_reader
 
+porter = PorterStemmer()
 
 stemmer = nltk.stem.porter.PorterStemmer()
 WORD = re.compile(r'\w+')
@@ -48,9 +53,12 @@ def split_into_sentences(text):
     if "\"" in text: text = text.replace(".\"","\".")
     if "!" in text: text = text.replace("!\"","\"!")
     if "?" in text: text = text.replace("?\"","\"?")
+    #if "," in text: text = text.replace(",\"","\",")
+
     text = text.replace(".",".<stop>")
     text = text.replace("?","?<stop>")
     text = text.replace("!","!<stop>")
+    #text = text.replace(",","!<stop>")
     text = text.replace("<prd>",".")
     sentences = text.split("<stop>")
     sentences = sentences[:-1]
@@ -77,7 +85,23 @@ def remove_stop_words(sentences) :
         for word in split :
             if word not in stop :
                 try :
-                    stemmer.stem(word)
+                   
+                    tokens.append(porter.stem(word))
+                except :
+                    tokens.append(word)
+        
+        tokenized_sentences.append(tokens)
+    return tokenized_sentences
+
+def remove_stop_words_without_lower(sentences) :
+    tokenized_sentences = []
+    for sentence in sentences :
+        tokens = []
+        split = sentence.split()
+        for word in split :
+            if word.lower() not in stop :
+                try :
+                   
                     tokens.append(word)
                 except :
                     tokens.append(word)
@@ -110,7 +134,6 @@ def tfIsf(tokenized_sentences):
             score = score + counts[word]*math.log(count_word-1)
         scores.append(score/len(sentence))
     return scores
-
 
 
 
@@ -219,6 +242,7 @@ def sentencePos(sentences) :
 
 def sentenceLength(tokenized_sentences) :
     count = []
+    maxLength = sys.maxint
     for sentence in tokenized_sentences:
         num_words = 0
         for word in sentence :
@@ -227,13 +251,81 @@ def sentenceLength(tokenized_sentences) :
             count.append(0)
         else :
             count.append(num_words)
-    print(count)
+    
+    count = [1.0*x/(maxLength) for x in count]
     return count
 
+def thematicFeature(tokenized_sentences) :
+	word_list = []
+	for sentence in tokenized_sentences :
+		for word in sentence :
+			try:
+				word = ''.join(e for e in word if e.isalnum())
+				#print(word)
+				word_list.append(word)
+			except Exception as e:
+				print("ERR")
+	counts = Counter(word_list)
+	number_of_words = len(counts)
+	most_common = counts.most_common(10)
+	thematic_words = []
+	for data in most_common :
+		thematic_words.append(data[0])
+	print(thematic_words)
+	scores = []
+	for sentence in tokenized_sentences :
+		score = 0
+		for word in sentence :
+			try:
+				word = ''.join(e for e in word if e.isalnum())
+				if word in thematic_words :
+					score = score + 1
+				#print(word)
+			except Exception as e:
+				print("ERR")
+		score = 1.0*score/(number_of_words)
+		scores.append(score)
+	return scores
+
+def upperCaseFeature(sentences) :
+	tokenized_sentences2 = remove_stop_words_without_lower(sentences)
+	#print(tokenized_sentences2)
+	upper_case = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	scores = []
+	for sentence in tokenized_sentences2 :
+		score = 0
+		for word in sentence :
+			if word[0] in upper_case :
+				score = score + 1
+		scores.append(1.0*score/len(sentence))
+	return scores
+
+def cuePhraseFeature(sentences) :
+	pass
+
+def sentencePosition(paragraphs):
+	scores = []
+	for para in paragraphs :
+		sentences = split_into_sentences(para)
+		if len(sentences) == 1 :
+			score = 1.0
+			scores.append(score)
+		elif len(sentences) == 2 :
+			scores.append(1.0)
+			scores.append(1.0)
+		elif len(sentences) >= 3 :
+			scores.append(1.0)
+			for x in range(len(sentences)-2):
+				scores.append(0.0)
+			scores.append(1.0)
+	return scores
+			
 def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanExtractGiven) :
     
     file = open(filename, 'r')
     text = file.read()
+    paragraphs = para_reader.show_paragraphs(filename)
+    print("Number of paras : %d",len(paragraphs))
     sentences = split_into_sentences(text)
     text_len = len(sentences)
     humanYesOrNo = []
@@ -249,6 +341,10 @@ def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanE
     
     tokenized_sentences = remove_stop_words(sentences)
     tagged = posTagger(remove_stop_words(sentences))
+
+    thematicFeature(tokenized_sentences)
+    print(upperCaseFeature(sentences))
+    sentencePosition(paragraphs)
 
     tfIsfScore = tfIsf(tokenized_sentences)
     similarityScore = similarityScores(tokenized_sentences)
