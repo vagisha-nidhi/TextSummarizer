@@ -20,6 +20,7 @@ import sys
 from nltk.stem import PorterStemmer
 from collections import Counter
 import para_reader
+import os
 
 porter = PorterStemmer()
 
@@ -76,6 +77,7 @@ def split_into_sentences(text):
 precision_values = []
 recall_values = []
 Fscore_values = []
+sentenceLengths = []
 
 def remove_stop_words(sentences) :
     tokenized_sentences = []
@@ -320,16 +322,19 @@ def sentencePosition(paragraphs):
 			scores.append(1.0)
 	return scores
 			
-def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanExtractGiven) :
+def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanExtractGiven, cwd) :
     
+    os.chdir(cwd+"/articles")
     file = open(filename, 'r')
     text = file.read()
     paragraphs = para_reader.show_paragraphs(filename)
     print("Number of paras : %d",len(paragraphs))
     sentences = split_into_sentences(text)
     text_len = len(sentences)
+    sentenceLengths.append(text_len)
     humanYesOrNo = []
     
+    os.chdir(cwd+"/lists")
     if humanExtractGiven == False :
         humanYesOrNo = askHuman.humanGenerator(text)
     else:
@@ -422,6 +427,8 @@ def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanE
             indeces_extracted.append(enhanced_feature_sum[x][1])
 
     autoYesOrNo = askHuman.automaticGenerator(indeces_extracted,text_len)
+    #Comment
+
     precision, recall, Fscore = askHuman.compareHumanAndAutomatic(humanYesOrNo,autoYesOrNo)
 
     precision_values.append(precision)
@@ -439,11 +446,13 @@ def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanE
         finalText = finalText + extracted_sentences[i][0]
 
 
-    print("Precision : " + repr(precision) +"\nRecall : " + repr(recall) + "\nFscore : "+ repr(Fscore))
+    # print("Precision : " + repr(precision) +"\nRecall : " + repr(recall) + "\nFscore : "+ repr(Fscore))
+    os.chdir(cwd+"/outputs")
     file = open(output_file_name, "w")
     file.write(finalText)
     file.close()
 
+    # os.chdir(cwd+"/lists")
     # file_n = open(humanExtractedYesOrNo_files,"w")
     # for item in autoYesOrNo:
     #     print(item, end="", file=file_n)
@@ -463,6 +472,12 @@ filenames.append("article6")
 filenames.append("article7")
 filenames.append("article8")
 # filenames.append("article9")
+# filenames.append("article10")
+# filenames.append("article11")
+# filenames.append("article12")
+# filenames.append("article13")
+# filenames.append("article14")
+
 
 output_file_list = []
 output_file_list.append("op1")
@@ -474,6 +489,12 @@ output_file_list.append("op6")
 output_file_list.append("op7")
 output_file_list.append("op8")
 # output_file_list.append("op9")
+# output_file_list.append("op10")
+# output_file_list.append("op11")
+# output_file_list.append("op12")
+# output_file_list.append("op13")
+# output_file_list.append("op14")
+
 
 humanExtractedYesOrNo_files = []
 humanExtractedYesOrNo_files.append("list1")
@@ -485,13 +506,21 @@ humanExtractedYesOrNo_files.append("list6")
 humanExtractedYesOrNo_files.append("list7")
 humanExtractedYesOrNo_files.append("list8")
 # humanExtractedYesOrNo_files.append("list9")
+# humanExtractedYesOrNo_files.append("list10")
+# humanExtractedYesOrNo_files.append("list11")
+# humanExtractedYesOrNo_files.append("list12")
+# humanExtractedYesOrNo_files.append("list13")
+# humanExtractedYesOrNo_files.append("list14")
+
 
 #executeForAFile(filename)
 
+cwd = os.getcwd()
+
 for x in range(len(filenames)):
-    executeForAFile(filenames[x],output_file_list[x],humanExtractedYesOrNo_files[x],True)
+    executeForAFile(filenames[x],output_file_list[x],humanExtractedYesOrNo_files[x],True,cwd)
 
-
+os.chdir(cwd)
 file = open("precision_file", "w")
 for item in precision_values:
     print(item, end="\n", file=file)
@@ -505,5 +534,10 @@ file.close()
 
 file = open("fscore_file", "w")
 for item in Fscore_values:
+    print(item, end="\n", file=file)
+file.close()
+
+file = open("lengths", "w")
+for item in sentenceLengths:
     print(item, end="\n", file=file)
 file.close()
