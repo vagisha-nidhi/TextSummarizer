@@ -429,11 +429,11 @@ def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanE
     autoYesOrNo = askHuman.automaticGenerator(indeces_extracted,text_len)
     #Comment
 
-    precision, recall, Fscore = askHuman.compareHumanAndAutomatic(humanYesOrNo,autoYesOrNo)
+    # precision, recall, Fscore = askHuman.compareHumanAndAutomatic(humanYesOrNo,autoYesOrNo)
 
-    precision_values.append(precision)
-    recall_values.append(recall)
-    Fscore_values.append(Fscore)
+    # precision_values.append(precision)
+    # recall_values.append(recall)
+    # Fscore_values.append(Fscore)
 
     print(extracted_sentences)
     extracted_sentences.sort(key=lambda x: x[1])
@@ -452,12 +452,12 @@ def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanE
     file.write(finalText)
     file.close()
 
-    # os.chdir(cwd+"/lists")
-    # file_n = open(humanExtractedYesOrNo_files,"w")
-    # for item in autoYesOrNo:
-    #     print(item, end="", file=file_n)
+    os.chdir(cwd+"/lists")
+    file_n = open(humanExtractedYesOrNo_files,"w")
+    for item in autoYesOrNo:
+        print(item, end="", file=file_n)
     
-    # file_n.close()
+    file_n.close()
 
 
 
@@ -471,12 +471,19 @@ filenames.append("article5")
 filenames.append("article6")
 filenames.append("article7")
 filenames.append("article8")
-# filenames.append("article9")
-# filenames.append("article10")
-# filenames.append("article11")
-# filenames.append("article12")
-# filenames.append("article13")
-# filenames.append("article14")
+filenames.append("article9")
+filenames.append("article10")
+filenames.append("article11")
+filenames.append("article12")
+filenames.append("article13")
+filenames.append("article14")
+filenames.append("article15")
+filenames.append("article16")
+filenames.append("article17")
+filenames.append("article18")
+filenames.append("article19")
+filenames.append("article20")
+
 
 
 output_file_list = []
@@ -488,12 +495,18 @@ output_file_list.append("op5")
 output_file_list.append("op6")
 output_file_list.append("op7")
 output_file_list.append("op8")
-# output_file_list.append("op9")
-# output_file_list.append("op10")
-# output_file_list.append("op11")
-# output_file_list.append("op12")
-# output_file_list.append("op13")
-# output_file_list.append("op14")
+output_file_list.append("op9")
+output_file_list.append("op10")
+output_file_list.append("op11")
+output_file_list.append("op12")
+output_file_list.append("op13")
+output_file_list.append("op14")
+output_file_list.append("op15")
+output_file_list.append("op16")
+output_file_list.append("op17")
+output_file_list.append("op18")
+output_file_list.append("op19")
+output_file_list.append("op20")
 
 
 humanExtractedYesOrNo_files = []
@@ -505,12 +518,18 @@ humanExtractedYesOrNo_files.append("list5")
 humanExtractedYesOrNo_files.append("list6")
 humanExtractedYesOrNo_files.append("list7")
 humanExtractedYesOrNo_files.append("list8")
-# humanExtractedYesOrNo_files.append("list9")
-# humanExtractedYesOrNo_files.append("list10")
-# humanExtractedYesOrNo_files.append("list11")
-# humanExtractedYesOrNo_files.append("list12")
-# humanExtractedYesOrNo_files.append("list13")
-# humanExtractedYesOrNo_files.append("list14")
+humanExtractedYesOrNo_files.append("list9")
+humanExtractedYesOrNo_files.append("list10")
+humanExtractedYesOrNo_files.append("list11")
+humanExtractedYesOrNo_files.append("list12")
+humanExtractedYesOrNo_files.append("list13")
+humanExtractedYesOrNo_files.append("list14")
+humanExtractedYesOrNo_files.append("list15")
+humanExtractedYesOrNo_files.append("list16")
+humanExtractedYesOrNo_files.append("list17")
+humanExtractedYesOrNo_files.append("list18")
+humanExtractedYesOrNo_files.append("list19")
+humanExtractedYesOrNo_files.append("list20")
 
 
 #executeForAFile(filename)
@@ -521,21 +540,21 @@ for x in range(len(filenames)):
     executeForAFile(filenames[x],output_file_list[x],humanExtractedYesOrNo_files[x],True,cwd)
 
 os.chdir(cwd)
-file = open("precision_file", "w")
-for item in precision_values:
-    print(item, end="\n", file=file)
-file.close()
+# file = open("precision_file", "w")
+# for item in precision_values:
+#     print(item, end="\n", file=file)
+# file.close()
 
-file = open("recall_file", "w")
-for item in recall_values:
-    print(item, end="\n", file=file)
+# file = open("recall_file", "w")
+# for item in recall_values:
+#     print(item, end="\n", file=file)
 
-file.close()
+# file.close()
 
-file = open("fscore_file", "w")
-for item in Fscore_values:
-    print(item, end="\n", file=file)
-file.close()
+# file = open("fscore_file", "w")
+# for item in Fscore_values:
+#     print(item, end="\n", file=file)
+# file.close()
 
 file = open("lengths", "w")
 for item in sentenceLengths:
