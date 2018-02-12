@@ -15,7 +15,6 @@ import rbm
 import math
 from operator import itemgetter
 import pandas as pd
-import askHuman
 import sys
 from nltk.stem import PorterStemmer
 from collections import Counter
@@ -258,98 +257,90 @@ def sentenceLength(tokenized_sentences) :
     return count
 
 def thematicFeature(tokenized_sentences) :
-	word_list = []
-	for sentence in tokenized_sentences :
-		for word in sentence :
-			try:
-				word = ''.join(e for e in word if e.isalnum())
-				#print(word)
-				word_list.append(word)
-			except Exception as e:
-				print("ERR")
-	counts = Counter(word_list)
-	number_of_words = len(counts)
-	most_common = counts.most_common(10)
-	thematic_words = []
-	for data in most_common :
-		thematic_words.append(data[0])
-	print(thematic_words)
-	scores = []
-	for sentence in tokenized_sentences :
-		score = 0
-		for word in sentence :
-			try:
-				word = ''.join(e for e in word if e.isalnum())
-				if word in thematic_words :
-					score = score + 1
-				#print(word)
-			except Exception as e:
-				print("ERR")
-		score = 1.0*score/(number_of_words)
-		scores.append(score)
-	return scores
+    word_list = []
+    for sentence in tokenized_sentences :
+        for word in sentence :
+            try:
+                word = ''.join(e for e in word if e.isalnum())
+                #print(word)
+                word_list.append(word)
+            except Exception as e:
+                print("ERR")
+    counts = Counter(word_list)
+    number_of_words = len(counts)
+    most_common = counts.most_common(10)
+    thematic_words = []
+    for data in most_common :
+        thematic_words.append(data[0])
+    print(thematic_words)
+    scores = []
+    for sentence in tokenized_sentences :
+        score = 0
+        for word in sentence :
+            try:
+                word = ''.join(e for e in word if e.isalnum())
+                if word in thematic_words :
+                    score = score + 1
+                #print(word)
+            except Exception as e:
+                print("ERR")
+        score = 1.0*score/(number_of_words)
+        scores.append(score)
+    return scores
 
 def upperCaseFeature(sentences) :
-	tokenized_sentences2 = remove_stop_words_without_lower(sentences)
-	#print(tokenized_sentences2)
-	upper_case = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	scores = []
-	for sentence in tokenized_sentences2 :
-		score = 0
-		for word in sentence :
-			if word[0] in upper_case :
-				score = score + 1
-		scores.append(1.0*score/len(sentence))
-	return scores
+    tokenized_sentences2 = remove_stop_words_without_lower(sentences)
+    #print(tokenized_sentences2)
+    upper_case = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    scores = []
+    for sentence in tokenized_sentences2 :
+        score = 0
+        for word in sentence :
+            if word[0] in upper_case :
+                score = score + 1
+        scores.append(1.0*score/len(sentence))
+    return scores
 
 def cuePhraseFeature(sentences) :
-	pass
+    pass
 
 def sentencePosition(paragraphs):
-	scores = []
-	for para in paragraphs :
-		sentences = split_into_sentences(para)
-		if len(sentences) == 1 :
-			score = 1.0
-			scores.append(score)
-		elif len(sentences) == 2 :
-			scores.append(1.0)
-			scores.append(1.0)
-		elif len(sentences) >= 3 :
-			scores.append(1.0)
-			for x in range(len(sentences)-2):
-				scores.append(0.0)
-			scores.append(1.0)
-	return scores
-			
-def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanExtractGiven, cwd) :
+    scores = []
+    for para in paragraphs:
+        sentences = split_into_sentences(para)
+        print(len(sentences))
+        if len(sentences) == 1 :
+            scores.append(1.0)
+        elif len(sentences) == 2 :
+            scores.append(1.0)
+            scores.append(1.0)
+        else :
+            scores.append(1.0)
+            for x in range(len(sentences)-2) :
+                scores.append(0.0)
+            scores.append(1.0)
+    return scores
+
+            
+def executeForAFile(filename,output_file_name,cwd) :
     
     os.chdir(cwd+"/articles")
     file = open(filename, 'r')
     text = file.read()
     paragraphs = para_reader.show_paragraphs(filename)
+    print(paragraphs)
     print("Number of paras : %d",len(paragraphs))
     sentences = split_into_sentences(text)
     text_len = len(sentences)
     sentenceLengths.append(text_len)
-    humanYesOrNo = []
-    
-    os.chdir(cwd+"/lists")
-    if humanExtractGiven == False :
-        humanYesOrNo = askHuman.humanGenerator(text)
-    else:
-        
-        with open(humanExtractedYesOrNo_files) as fileobj:
-            for word in fileobj:  
-                for ch in word: 
-                    humanYesOrNo.append(ord(ch)-48)
     
     tokenized_sentences = remove_stop_words(sentences)
     tagged = posTagger(remove_stop_words(sentences))
 
     thematicFeature(tokenized_sentences)
     print(upperCaseFeature(sentences))
-    sentencePosition(paragraphs)
+    print("LENNNNN : ")
+    print(len(sentencePosition(paragraphs)))
 
     tfIsfScore = tfIsf(tokenized_sentences)
     similarityScore = similarityScores(tokenized_sentences)
@@ -362,17 +353,20 @@ def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanE
     namedEntityRecogScore = namedEntityRecog(sentences)
     sentencePosScore = sentencePos(sentences)
     sentenceLengthScore = sentenceLength(tokenized_sentences)
+    thematicFeatureScore = thematicFeature(tokenized_sentences)
+    sentenceParaScore = sentencePosition(paragraphs)
 
 
     featureMatrix = []
-    featureMatrix.append(tfIsfScore)
-    featureMatrix.append(similarityScore)
-    featureMatrix.append(properNounScore)
-    featureMatrix.append(centroidSimilarityScore)
-    featureMatrix.append(numericTokenScore)
-    featureMatrix.append(namedEntityRecogScore)
+    featureMatrix.append(thematicFeatureScore)
     featureMatrix.append(sentencePosScore)
     featureMatrix.append(sentenceLengthScore)
+    #featureMatrix.append(sentenceParaScore)
+    featureMatrix.append(properNounScore)
+    featureMatrix.append(numericTokenScore)
+    featureMatrix.append(namedEntityRecogScore)
+    featureMatrix.append(tfIsfScore)
+    featureMatrix.append(centroidSimilarityScore)
 
 
     featureMat = np.zeros((len(sentences),8))
@@ -386,6 +380,11 @@ def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanE
     #featureMat_normed = featureMat / featureMat.max(axis=0)
     featureMat_normed = featureMat
 
+    feature_sum = []
+
+    for i in range(len(np.sum(featureMat,axis=1))) :
+        feature_sum.append(np.sum(featureMat,axis=1)[i])
+
     print(featureMat_normed)
     for i in range(len(sentences)):
         print(featureMat_normed[i])
@@ -398,9 +397,11 @@ def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanE
     print(np.sum(temp, axis=1))
 
     enhanced_feature_sum = []
+    enhanced_feature_sum2 = []
 
     for i in range(len(np.sum(temp,axis=1))) :
         enhanced_feature_sum.append([np.sum(temp,axis=1)[i],i])
+        enhanced_feature_sum2.append(np.sum(temp,axis=1)[i])
 
     print(enhanced_feature_sum)
     print("\n\n\n")
@@ -426,18 +427,8 @@ def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanE
             extracted_sentences.append([sentences[enhanced_feature_sum[x][1]], enhanced_feature_sum[x][1]])
             indeces_extracted.append(enhanced_feature_sum[x][1])
 
-    autoYesOrNo = askHuman.automaticGenerator(indeces_extracted,text_len)
-    #Comment
 
-    # precision, recall, Fscore = askHuman.compareHumanAndAutomatic(humanYesOrNo,autoYesOrNo)
-
-    # precision_values.append(precision)
-    # recall_values.append(recall)
-    # Fscore_values.append(Fscore)
-
-    print(extracted_sentences)
     extracted_sentences.sort(key=lambda x: x[1])
-    print(extracted_sentences)
 
     finalText = ""
     print("\n\n\nExtracted Final Text : \n\n\n")
@@ -445,118 +436,31 @@ def executeForAFile(filename,output_file_name,humanExtractedYesOrNo_files,humanE
         print("\n"+extracted_sentences[i][0])
         finalText = finalText + extracted_sentences[i][0]
 
-
-    # print("Precision : " + repr(precision) +"\nRecall : " + repr(recall) + "\nFscore : "+ repr(Fscore))
     os.chdir(cwd+"/outputs")
     file = open(output_file_name, "w")
     file.write(finalText)
     file.close()
 
-    os.chdir(cwd+"/lists")
-    file_n = open(humanExtractedYesOrNo_files,"w")
-    for item in autoYesOrNo:
-        print(item, end="", file=file_n)
-    
-    file_n.close()
+    os.chdir(cwd)
+    file = open("featureSum", "w")
+    for item in feature_sum :
+        print(item, end = "\n", file = file)
 
+    file = open("enhancedfeatureSum", "w")
+    for item in enhanced_feature_sum2 :
+        print(item, end = "\n", file = file)
 
 
 filename = "article1"
 filenames = []
-filenames.append("article1")
-filenames.append("article2")
-filenames.append("article3")
-filenames.append("article4")
-filenames.append("article5")
-filenames.append("article6")
-filenames.append("article7")
-filenames.append("article8")
-filenames.append("article9")
-filenames.append("article10")
-filenames.append("article11")
-filenames.append("article12")
-filenames.append("article13")
-filenames.append("article14")
-filenames.append("article15")
-filenames.append("article16")
-filenames.append("article17")
-filenames.append("article18")
-filenames.append("article19")
-filenames.append("article20")
-
-
-
 output_file_list = []
-output_file_list.append("op1")
-output_file_list.append("op2")
-output_file_list.append("op3")
-output_file_list.append("op4")
-output_file_list.append("op5")
-output_file_list.append("op6")
-output_file_list.append("op7")
-output_file_list.append("op8")
-output_file_list.append("op9")
-output_file_list.append("op10")
-output_file_list.append("op11")
-output_file_list.append("op12")
-output_file_list.append("op13")
-output_file_list.append("op14")
-output_file_list.append("op15")
-output_file_list.append("op16")
-output_file_list.append("op17")
-output_file_list.append("op18")
-output_file_list.append("op19")
-output_file_list.append("op20")
-
-
-humanExtractedYesOrNo_files = []
-humanExtractedYesOrNo_files.append("list1")
-humanExtractedYesOrNo_files.append("list2")
-humanExtractedYesOrNo_files.append("list3")
-humanExtractedYesOrNo_files.append("list4")
-humanExtractedYesOrNo_files.append("list5")
-humanExtractedYesOrNo_files.append("list6")
-humanExtractedYesOrNo_files.append("list7")
-humanExtractedYesOrNo_files.append("list8")
-humanExtractedYesOrNo_files.append("list9")
-humanExtractedYesOrNo_files.append("list10")
-humanExtractedYesOrNo_files.append("list11")
-humanExtractedYesOrNo_files.append("list12")
-humanExtractedYesOrNo_files.append("list13")
-humanExtractedYesOrNo_files.append("list14")
-humanExtractedYesOrNo_files.append("list15")
-humanExtractedYesOrNo_files.append("list16")
-humanExtractedYesOrNo_files.append("list17")
-humanExtractedYesOrNo_files.append("list18")
-humanExtractedYesOrNo_files.append("list19")
-humanExtractedYesOrNo_files.append("list20")
-
-
-#executeForAFile(filename)
-
 cwd = os.getcwd()
 
+
+for file in os.listdir(cwd+"/articles"):
+    filenames.append(file)
+    output_file_list.append(file)
+
+
 for x in range(len(filenames)):
-    executeForAFile(filenames[x],output_file_list[x],humanExtractedYesOrNo_files[x],True,cwd)
-
-os.chdir(cwd)
-# file = open("precision_file", "w")
-# for item in precision_values:
-#     print(item, end="\n", file=file)
-# file.close()
-
-# file = open("recall_file", "w")
-# for item in recall_values:
-#     print(item, end="\n", file=file)
-
-# file.close()
-
-# file = open("fscore_file", "w")
-# for item in Fscore_values:
-#     print(item, end="\n", file=file)
-# file.close()
-
-file = open("lengths", "w")
-for item in sentenceLengths:
-    print(item, end="\n", file=file)
-file.close()
+    executeForAFile(filenames[x],output_file_list[x],cwd)
