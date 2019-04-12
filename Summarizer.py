@@ -16,11 +16,16 @@ import math
 from operator import itemgetter
 import pandas as pd
 import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 from nltk.stem import PorterStemmer
 from collections import Counter
 import para_reader
 import os
-
+nltk.download('averaged_perceptron_tagger')
+nltk.download('punkt')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
 porter = PorterStemmer()
 
 stemmer = nltk.stem.porter.PorterStemmer()
@@ -329,7 +334,7 @@ def executeForAFile(filename,output_file_name,cwd) :
     text = file.read()
     paragraphs = para_reader.show_paragraphs(filename)
     print(paragraphs)
-    print("Number of paras : %d",len(paragraphs))
+    print("Number of paras : %d", len(paragraphs))
     sentences = split_into_sentences(text)
     text_len = len(sentences)
     sentenceLengths.append(text_len)
