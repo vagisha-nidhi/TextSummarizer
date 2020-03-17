@@ -25,8 +25,8 @@ class Paragraphs:
 
     def __getitem__(self, index):
         if index != self.para_num:
-            raise TypeError, "Only sequential access supported"
-        
+            raise(TypeError, "Only sequential access supported")
+
         self.para_num += 1
         # Start where we left off and skip 0+ separator lines
         while 1:
@@ -50,7 +50,7 @@ class Paragraphs:
             self.line_num += 1
             result.append(line)
             if line == self.separator: break
-            
+
         return ''.join(result)
 
 # Here's an example function, showing how to use class Paragraphs:
@@ -64,4 +64,3 @@ def show_paragraphs(filename, numpars=20):
 
     return paralist
 #print(show_paragraphs('article2'))
-

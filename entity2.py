@@ -1,4 +1,4 @@
-import nltk 
+import nltk
 
 sample = "Narenda Modi is the pm of India"
 
@@ -27,5 +27,5 @@ def ner(sample):
     # print extract_entity_names(tree)
 
         entity_names.extend(extract_entity_names(tree))
-    print set(entity_names)
+    print(set(entity_names))
     return len(entity_names)
