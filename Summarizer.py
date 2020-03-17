@@ -15,9 +15,10 @@ import rbm
 import math
 from operator import itemgetter
 import pandas as pd
+#from importlib import reload
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
+#reload(sys)
+#sys.setdefaultencoding('utf8')
 from nltk.stem import PorterStemmer
 from collections import Counter
 import para_reader
@@ -91,11 +92,11 @@ def remove_stop_words(sentences) :
         for word in split :
             if word not in stop :
                 try :
-                   
+
                     tokens.append(porter.stem(word))
                 except :
                     tokens.append(word)
-        
+
         tokenized_sentences.append(tokens)
     return tokenized_sentences
 
@@ -107,14 +108,14 @@ def remove_stop_words_without_lower(sentences) :
         for word in split :
             if word.lower() not in stop :
                 try :
-                   
+
                     tokens.append(word)
                 except :
                     tokens.append(word)
-        
+
         tokenized_sentences.append(tokens)
     return tokenized_sentences
-        
+
 
 def posTagger(tokenized_sentences) :
     tagged = []
@@ -171,7 +172,7 @@ def properNounScores(tagged) :
                 score += 1
         scores.append(score/float(len(tagged[i])))
     return scores
-        
+
 
 def text_to_vector(text):
     words = WORD.findall(text)
@@ -198,7 +199,7 @@ def centroidSimilarity(sentences,tfIsfScore) :
     for sentence in sentences :
         vec1 = text_to_vector(sentences[centroidIndex])
         vec2 = text_to_vector(sentence)
-        
+
         score = get_cosine(vec1,vec2)
         scores.append(score)
     return scores
@@ -218,7 +219,7 @@ def numericToken(tokenized_sentences):
         score = 0
         for word in sentence :
             if is_number(word) :
-                score +=1 
+                score +=1
         scores.append(score/float(len(sentence)))
     return scores
 
@@ -248,7 +249,7 @@ def sentencePos(sentences) :
 
 def sentenceLength(tokenized_sentences) :
     count = []
-    maxLength = sys.maxint
+    maxLength = sys.maxsize
     for sentence in tokenized_sentences:
         num_words = 0
         for word in sentence :
@@ -257,7 +258,7 @@ def sentenceLength(tokenized_sentences) :
             count.append(0)
         else :
             count.append(num_words)
-    
+
     count = [1.0*x/(maxLength) for x in count]
     return count
 
@@ -326,9 +327,9 @@ def sentencePosition(paragraphs):
             scores.append(1.0)
     return scores
 
-            
+
 def executeForAFile(filename,output_file_name,cwd) :
-    
+
     os.chdir(cwd+"/articles")
     file = open(filename, 'r')
     text = file.read()
@@ -338,7 +339,7 @@ def executeForAFile(filename,output_file_name,cwd) :
     sentences = split_into_sentences(text)
     text_len = len(sentences)
     sentenceLengths.append(text_len)
-    
+
     tokenized_sentences = remove_stop_words(sentences)
     tagged = posTagger(remove_stop_words(sentences))
 
@@ -414,7 +415,7 @@ def executeForAFile(filename,output_file_name,cwd) :
     enhanced_feature_sum.sort(key=lambda x: x[0])
     print(enhanced_feature_sum)
 
-    length_to_be_extracted = len(enhanced_feature_sum)/2
+    length_to_be_extracted = len(enhanced_feature_sum)//2
 
     print("\n\nThe text is : \n\n")
     for x in range(len(sentences)):
